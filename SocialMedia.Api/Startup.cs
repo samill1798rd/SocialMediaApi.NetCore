@@ -1,5 +1,6 @@
 using AutoMapper;
 using ElmahCore.Mvc;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -30,12 +31,13 @@ namespace SocialMedia.Api
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddControllers().AddNewtonsoftJson(options => 
+            services.AddControllers().AddNewtonsoftJson(options =>
             {
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore; 
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             })
-            .ConfigureApiBehaviorOptions(options => {
-                options.SuppressModelStateInvalidFilter = true;
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                //options.SuppressModelStateInvalidFilter = true;
             });
 
             //DBcontext
@@ -47,7 +49,10 @@ namespace SocialMedia.Api
 
             services.AddMvc(options =>
             {
-                options.Filters.Add<ValidationFilter>();
+               options.Filters.Add<ValidationFilter>();
+            }).AddFluentValidation(options =>
+            {
+                options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
             });
         }
 
