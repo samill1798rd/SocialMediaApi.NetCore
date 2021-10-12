@@ -4,7 +4,6 @@ using SocialMedia.Core.DTOs;
 using SocialMedia.Core.Entities;
 using SocialMedia.Core.Interfaces;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SocialMedia.Api.Controllers
@@ -49,6 +48,22 @@ namespace SocialMedia.Api.Controllers
             return Ok(post);
         }
 
+        [HttpPut]
+        public async Task<IActionResult> Put(int id, PostDto postDto)
+        {
+            var post = _mapper.Map<Post>(postDto);
+            post.PostId = id;
+
+            var result =  await _postRepository.UpdatePost(post);
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _postRepository.DeletePost(id);
+            return Ok(result);
+        }
 
 
     }
